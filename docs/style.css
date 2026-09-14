@@ -1,0 +1,66 @@
+:root {
+  --bg: #0b1017;
+  --panel: #121a23;
+  --panel2: #18222d;
+  --ink: #e6edf3;
+  --muted: #7d8895;
+  --line: #1f2a36;
+  --up: #3ccf7f;
+  --down: #f0655f;
+  --warn: #f0b64f;
+  --gold: #f2c14e;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); }
+body {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-size: 15px; line-height: 1.5;
+  padding: 0 16px 60px;
+}
+a { color: var(--up); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.mono { font-family: Consolas, "Cascadia Mono", monospace; font-variant-numeric: tabular-nums; }
+.wrap { max-width: 980px; margin: 0 auto; }
+
+header.top { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; padding: 22px 0 10px; }
+header.top img { height: 54px; width: auto; }
+header.top .kwk { margin-left: auto; font-family: Consolas, monospace; font-size: 22px; }
+header.top .kwk small { color: var(--muted); font-size: 12px; letter-spacing: .14em; margin-right: 6px; }
+header.top .kwk.up { color: var(--up); } header.top .kwk.down { color: var(--down); }
+nav { display: flex; gap: 4px; flex-wrap: wrap; border-bottom: 1px solid var(--line); padding-bottom: 10px; margin-bottom: 22px; }
+nav a { padding: 6px 12px; border-radius: 6px; color: var(--muted); font-weight: 600; }
+nav a.here, nav a:hover { color: var(--ink); background: var(--panel); text-decoration: none; }
+
+h1 { font-size: 30px; margin: 6px 0 4px; letter-spacing: -.01em; }
+h2 { font-size: 18px; margin: 30px 0 10px; }
+.lede { color: var(--muted); font-size: 16px; max-width: 64ch; margin: 0 0 18px; }
+.pitch { background: var(--panel); border-left: 3px solid var(--gold); padding: 12px 16px; border-radius: 4px; margin: 0 0 20px; max-width: 70ch; }
+.pitch b { color: var(--gold); }
+.stamp { color: var(--muted); font-size: 12px; margin-top: 30px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.tile { background: var(--panel); border-radius: 8px; padding: 12px 14px; }
+.tile .k { color: var(--muted); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+.tile .v { font-family: Consolas, monospace; font-size: 22px; margin-top: 2px; }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.tw { overflow-x: auto; background: var(--panel); border-radius: 8px; }
+th { text-align: left; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 10px 12px 6px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; font-family: Consolas, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.yes { color: var(--up); font-weight: 600; } .no { color: var(--down); font-weight: 600; }
+.muted { color: var(--muted); }
+.tag { display: inline-block; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; padding: 1px 6px; border-radius: 3px; background: var(--panel2); color: var(--muted); margin-left: 6px; vertical-align: 1px; }
+.tag.open { color: var(--up); } .tag.closing { color: var(--warn); } .tag.yes { color: var(--up); } .tag.no { color: var(--down); } .tag.void { color: var(--muted); }
+.pos { color: var(--up); } .neg { color: var(--down); }
+.rank { color: var(--muted); width: 32px; }
+.gold { color: var(--gold); }
+
+canvas.chart { width: 100%; height: 220px; display: block; background: var(--panel); border-radius: 8px; }
+.item { background: var(--panel); border-radius: 8px; padding: 16px 18px; margin-bottom: 12px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.item .name { font-size: 18px; font-weight: 600; }
+.item .price { font-family: Consolas, monospace; font-size: 20px; color: var(--gold); margin-left: auto; }
+.item code, .cmd { font-family: Consolas, monospace; background: var(--panel2); padding: 2px 8px; border-radius: 4px; }
+.empty { color: var(--muted); padding: 14px; }
+@media (max-width: 600px) { header.top .kwk { margin-left: 0; } h1 { font-size: 24px; } }
