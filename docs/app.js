@@ -70,7 +70,7 @@
   }
 
   function marketRows(ms, showStatus) {
-    if (!ms.length) return '<p class="empty">nothing open. i'm probably about to open one. probably. i forgot what i was doing.</p>';
+    if (!ms.length) return '<p class="empty">nothing open. i\'m probably about to open one. probably. i forgot what i was doing.</p>';
     return `<div class="tw"><table><thead><tr><th>Market</th><th></th><th class="num">Yes</th><th class="num">No</th><th class="num">${showStatus ? 'Settled' : 'Settles'}</th></tr></thead><tbody>` +
       ms.map(m => `<tr><td class="mono muted"><a href="market.html?id=${m.id}">${mk(m.id)}</a></td><td><a href="market.html?id=${m.id}">${esc(m.title)}</a>${m.kind === 'kalshi' ? '<span class="tag">kalshi</span>' : ''}${showStatus ? statusTag(m) : ''}</td>` +
         `<td class="num yes">${m.status === 'resolved' ? (m.outcome === 'yes' ? 100 : 0) : m.yes}</td><td class="num no">${m.status === 'resolved' ? (m.outcome === 'no' ? 100 : 0) : m.no}</td>` +
@@ -134,7 +134,7 @@
       const rows = d.leaderboard;
       $('#board').innerHTML = rows.length ? `<div class="tw"><table><thead><tr><th class="rank">#</th><th>Trader</th><th class="num">Equity</th><th class="num">Balance</th><th class="num">Net P&amp;L</th><th class="num">Record</th></tr></thead><tbody>` +
         rows.map((r, i) => `<tr><td class="rank mono">${i + 1}</td><td><a href="trader.html?name=${encodeURIComponent(r.name)}">${esc(r.name)}</a>${r.gold ? ' <span class="gold">★</span>' : ''}</td><td class="num">${kw(r.equity)}</td><td class="num">${kw(r.balance)}</td><td class="num ${r.pnl >= 0 ? 'pos' : 'neg'}">${r.pnl >= 0 ? '+' : ''}${kw(r.pnl)}</td><td class="num muted">${r.wins}–${r.losses}</td></tr>`).join('') + '</tbody></table></div>'
-        : '<p class="empty">nobody's traded yet. the top spot is wide open and honestly it's embarrassing for everyone.</p>';
+        : '<p class="empty">nobody\'s traded yet. the top spot is wide open and honestly it\'s embarrassing for everyone.</p>';
     }
 
     if (page === 'trader') {
@@ -156,7 +156,7 @@
         : '<p class="empty">shelf is empty. restocking. allegedly.</p>';
       $('#buys').innerHTML = d.shop.purchases.length ? `<div class="tw"><table><thead><tr><th>When</th><th>Who</th><th>Bought</th><th class="num">Paid</th></tr></thead><tbody>` +
         d.shop.purchases.map(p => `<tr><td class="muted mono">${when(p.at)}</td><td><a href="trader.html?name=${encodeURIComponent(p.name)}">${esc(p.name)}</a></td><td>${esc(p.item)}</td><td class="num">${kw(p.price)}</td></tr>`).join('') + '</tbody></table></div>'
-        : '<p class="empty">nobody's bought anything yet. the gold card is still on the shelf. staring at you. it knows.</p>';
+        : '<p class="empty">nobody\'s bought anything yet. the gold card is still on the shelf. staring at you. it knows.</p>';
     }
   }
 })();
