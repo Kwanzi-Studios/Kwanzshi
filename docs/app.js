@@ -152,8 +152,14 @@
     }
 
     if (page === 'shop') {
-      $('#items').innerHTML = d.shop.items.length ? d.shop.items.map(it => `<div class="item"><div><div class="name">${esc(it.name)}</div><div class="muted">Type <code>!shop buy ${it.id}</code> in chat</div></div><div class="price">${kw(it.price)}</div></div>`).join('')
+      $('#items').innerHTML = d.shop.items.length ? d.shop.items.map(it => `<button class="item" type="button" data-cmd="!shop buy ${it.id}" title="click to copy the command"><div><div class="name">${esc(it.name)}</div><div class="muted">click to copy <code>!shop buy ${it.id}</code>, then paste it in chat</div></div><div class="price">${kw(it.price)}</div></button>`).join('')
         : '<p class="empty">shelf is empty. restocking. allegedly.</p>';
+      document.querySelectorAll('.item[data-cmd]').forEach(btn => btn.addEventListener('click', () => {
+        const cmd = btn.dataset.cmd, hint = btn.querySelector('.muted'), was = hint.innerHTML;
+        const done = () => { hint.textContent = 'copied. now go paste it in chat.'; btn.classList.add('copied'); setTimeout(() => { hint.innerHTML = was; btn.classList.remove('copied'); }, 2000); };
+        const fallback = () => { const ta = document.createElement('textarea'); ta.value = cmd; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch (e) { hint.textContent = 'could not copy. type ' + cmd; } ta.remove(); };
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(cmd).then(done, fallback); else fallback();
+      }));
       $('#buys').innerHTML = d.shop.purchases.length ? `<div class="tw"><table><thead><tr><th>When</th><th>Who</th><th>Bought</th><th class="num">Paid</th></tr></thead><tbody>` +
         d.shop.purchases.map(p => `<tr><td class="muted mono">${when(p.at)}</td><td><a href="trader.html?name=${encodeURIComponent(p.name)}">${esc(p.name)}</a></td><td>${esc(p.item)}</td><td class="num">${kw(p.price)}</td></tr>`).join('') + '</tbody></table></div>'
         : '<p class="empty">nobody\'s bought anything yet. the gold card is still on the shelf. staring at you. it knows.</p>';
