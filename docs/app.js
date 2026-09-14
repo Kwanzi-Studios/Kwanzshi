@@ -12,7 +12,7 @@
   const params = new URLSearchParams(location.search);
 
   fetch('data.json?_=' + Date.now()).then(r => r.json()).then(render).catch(() => {
-    const m = $('#main'); if (m) m.innerHTML = '<p class="empty">The exchange is offline right now. Kwonks are still worth whatever you believe they are.</p>';
+    const m = $('#main'); if (m) m.innerHTML = '<p class="empty">exchange is offline. kwonks are still worth whatever you believe they are, which is the whole idea.</p>';
   });
 
   function header(d) {
@@ -21,7 +21,7 @@
     const ref = h.length > 20 ? h[h.length - 21][1] : (h[0] ? h[0][1] : d.rate);
     el.className = 'kwk ' + (d.rate > ref + 1e-9 ? 'up' : d.rate < ref - 1e-9 ? 'down' : '');
     el.innerHTML = '<small>KWK</small>' + d.rate.toFixed(3) + (d.rate > ref + 1e-9 ? ' ▲' : d.rate < ref - 1e-9 ? ' ▼' : '');
-    const st = $('#stamp'); if (st) st.textContent = 'Last update ' + when(d.generated) + (d.live ? ' · exchange is live' : ' · exchange is offline');
+    const st = $('#stamp'); if (st) st.textContent = 'last update ' + when(d.generated) + (d.live ? ' · exchange is live' : ' · exchange is offline (not streaming, or i forgot to start it)');
   }
 
   function lineChart(canvas, series, opts) {
@@ -70,7 +70,7 @@
   }
 
   function marketRows(ms, showStatus) {
-    if (!ms.length) return '<p class="empty">Nothing open. Kwanzi is probably about to open one. Probably.</p>';
+    if (!ms.length) return '<p class="empty">nothing open. i'm probably about to open one. probably. i forgot what i was doing.</p>';
     return `<div class="tw"><table><thead><tr><th>Market</th><th></th><th class="num">Yes</th><th class="num">No</th><th class="num">${showStatus ? 'Settled' : 'Settles'}</th></tr></thead><tbody>` +
       ms.map(m => `<tr><td class="mono muted"><a href="market.html?id=${m.id}">${mk(m.id)}</a></td><td><a href="market.html?id=${m.id}">${esc(m.title)}</a>${m.kind === 'kalshi' ? '<span class="tag">kalshi</span>' : ''}${showStatus ? statusTag(m) : ''}</td>` +
         `<td class="num yes">${m.status === 'resolved' ? (m.outcome === 'yes' ? 100 : 0) : m.yes}</td><td class="num no">${m.status === 'resolved' ? (m.outcome === 'no' ? 100 : 0) : m.no}</td>` +
@@ -78,7 +78,7 @@
   }
 
   function tradeRows(ts, withMarket) {
-    if (!ts.length) return '<p class="empty">No trades yet. Be the first. Be the legend.</p>';
+    if (!ts.length) return '<p class="empty">no trades yet. be the first. be the legend. be the cautionary tale.</p>';
     return `<div class="tw"><table><thead><tr><th>When</th><th>Who</th><th>What</th>${withMarket ? '<th>Market</th>' : ''}<th class="num">Contracts</th><th class="num">Price</th><th class="num">Kwonks</th></tr></thead><tbody>` +
       ts.map(t => `<tr><td class="muted mono">${clock(t.at)}</td><td><a href="trader.html?name=${encodeURIComponent(t.name)}">${esc(t.name)}</a></td><td>${t.action === 'buy' ? 'bought' : 'sold'} <span class="${t.side}">${t.side === 'yes' ? 'Yes' : 'No'}</span>${t.credit ? ' <span class="tag">on the house</span>' : ''}</td>` +
         `${withMarket ? `<td class="mono muted"><a href="market.html?id=${t.market_id}">${mk(t.market_id)}</a></td>` : ''}<td class="num">${px(t.contracts)}</td><td class="num">${px(t.avg_price)}</td><td class="num">${kw(t.kwonks)}</td></tr>`).join('') + '</tbody></table></div>';
@@ -111,7 +111,7 @@
 
     if (page === 'market') {
       const m = d.markets.find(x => x.id === parseInt(params.get('id'), 10));
-      if (!m) { main.innerHTML = '<p class="empty">No such market. It may have been before the records began, which was recently.</p>'; return; }
+      if (!m) { main.innerHTML = '<p class="empty">no such market. it might be from before the records started, which was recently, because this is new.</p>'; return; }
       document.title = mk(m.id) + ' · Kwanzshi';
       $('#title').innerHTML = `<span class="mono muted">${mk(m.id)}</span> ${esc(m.title)} ${statusTag(m)}`;
       let sub = m.kind === 'simulated' ? `Settles by checking KWK against ${m.strike.toFixed(2)} at ${clock(m.settle_at)}.` : m.kind === 'kalshi' ? 'Mirrors a real Kalshi market.' : 'Settles when Kwanzi calls it.';
@@ -134,29 +134,29 @@
       const rows = d.leaderboard;
       $('#board').innerHTML = rows.length ? `<div class="tw"><table><thead><tr><th class="rank">#</th><th>Trader</th><th class="num">Equity</th><th class="num">Balance</th><th class="num">Net P&amp;L</th><th class="num">Record</th></tr></thead><tbody>` +
         rows.map((r, i) => `<tr><td class="rank mono">${i + 1}</td><td><a href="trader.html?name=${encodeURIComponent(r.name)}">${esc(r.name)}</a>${r.gold ? ' <span class="gold">★</span>' : ''}</td><td class="num">${kw(r.equity)}</td><td class="num">${kw(r.balance)}</td><td class="num ${r.pnl >= 0 ? 'pos' : 'neg'}">${r.pnl >= 0 ? '+' : ''}${kw(r.pnl)}</td><td class="num muted">${r.wins}–${r.losses}</td></tr>`).join('') + '</tbody></table></div>'
-        : '<p class="empty">Nobody has traded yet. The top spot is wide open and it is embarrassing.</p>';
+        : '<p class="empty">nobody's traded yet. the top spot is wide open and honestly it's embarrassing for everyone.</p>';
     }
 
     if (page === 'trader') {
       const name = params.get('name') || '';
       const t = d.traders[name] || d.traders[Object.keys(d.traders).find(k => k.toLowerCase() === name.toLowerCase())];
-      if (!t) { main.innerHTML = `<p class="empty">No trader called ${esc(name)}. Say something in chat and you will exist.</p>`; return; }
+      if (!t) { main.innerHTML = `<p class="empty">no trader called ${esc(name)}. say something in chat and you'll exist. that's how it works here.</p>`; return; }
       document.title = t.name + ' · Kwanzshi';
       $('#title').innerHTML = esc(t.name) + (t.gold ? ' <span class="gold">★ Gold Card holder</span>' : '');
       $('#tiles').innerHTML = [['Equity', kw(t.equity)], ['Balance', kw(t.balance)], ['Net P&L', (t.pnl >= 0 ? '+' : '') + kw(t.pnl)], ['Record', t.wins + '–' + t.losses]]
         .map(([k, v]) => `<div class="tile"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
       $('#positions').innerHTML = t.positions.length ? `<div class="tw"><table><thead><tr><th>Market</th><th>Side</th><th class="num">Contracts</th><th class="num">Avg cost</th><th class="num">Worth now</th><th class="num">Pays if right</th></tr></thead><tbody>` +
         t.positions.map(p => `<tr><td><a href="market.html?id=${p.market_id}">${mk(p.market_id)}</a> <span class="muted">${esc(p.title)}</span></td><td class="${p.side}">${p.side === 'yes' ? 'Yes' : 'No'}</td><td class="num">${px(p.contracts)}</td><td class="num">${px(p.avg_cost)}</td><td class="num">${kw(p.value)}</td><td class="num">${kw(p.contracts * 100)}</td></tr>`).join('') + '</tbody></table></div>'
-        : '<p class="empty">No open positions. Sitting in cash. Cowardly, but respectable.</p>';
+        : '<p class="empty">no open positions. sitting in cash. cowardly, but respectable. (right click to moving.)</p>';
       $('#trades').innerHTML = tradeRows(t.trades, true);
     }
 
     if (page === 'shop') {
       $('#items').innerHTML = d.shop.items.length ? d.shop.items.map(it => `<div class="item"><div><div class="name">${esc(it.name)}</div><div class="muted">Type <code>!shop buy ${it.id}</code> in chat</div></div><div class="price">${kw(it.price)}</div></div>`).join('')
-        : '<p class="empty">Shelf is empty. Kwanzi is restocking. Allegedly.</p>';
+        : '<p class="empty">shelf is empty. restocking. allegedly.</p>';
       $('#buys').innerHTML = d.shop.purchases.length ? `<div class="tw"><table><thead><tr><th>When</th><th>Who</th><th>Bought</th><th class="num">Paid</th></tr></thead><tbody>` +
         d.shop.purchases.map(p => `<tr><td class="muted mono">${when(p.at)}</td><td><a href="trader.html?name=${encodeURIComponent(p.name)}">${esc(p.name)}</a></td><td>${esc(p.item)}</td><td class="num">${kw(p.price)}</td></tr>`).join('') + '</tbody></table></div>'
-        : '<p class="empty">Nobody has bought anything yet. The Gold Card is still on the shelf, staring at you.</p>';
+        : '<p class="empty">nobody's bought anything yet. the gold card is still on the shelf. staring at you. it knows.</p>';
     }
   }
 })();
