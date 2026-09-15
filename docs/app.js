@@ -163,7 +163,7 @@
         .map(([k, v]) => `<div class="tile"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
       $('#positions').innerHTML = t.positions.length ? `<div class="tw"><table><thead><tr><th>Market</th><th>Side</th><th class="num">Contracts</th><th class="num">Avg cost</th><th class="num">Worth now</th><th class="num">Pays if right</th></tr></thead><tbody>` +
         t.positions.map(p => `<tr><td><a href="market.html?id=${p.market_id}">${mk(p.market_id)}</a> <span class="muted">${esc(p.title)}</span></td><td class="${p.side}">${p.side === 'yes' ? 'Yes' : 'No'}</td><td class="num">${px(p.contracts)}</td><td class="num">${px(p.avg_cost)}</td><td class="num">${kw(p.value)}</td><td class="num">${kw(p.contracts * 100)}</td></tr>`).join('') + '</tbody></table></div>'
-        : '<p class="empty">no open positions. sitting in cash. cowardly, but respectable. (right click to moving.)</p>';
+        : '<p class="empty">no open positions.</p>';
       $('#trades').innerHTML = tradeRows(t.trades, true);
     }
 
