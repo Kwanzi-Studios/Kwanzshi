@@ -102,11 +102,6 @@
       const past = d.markets.filter(m => m.status === 'resolved' || m.status === 'void');
       $('#open').innerHTML = marketRows(open, false);
       $('#past').innerHTML = marketRows(past, true);
-      const res = past.filter(m => m.status === 'resolved');
-      if (res.length) {
-        const yesRate = res.filter(m => m.outcome === 'yes').length / res.length;
-        $('#calib').textContent = `${res.length} settled so far. ${Math.round(yesRate * 100)}% went Yes.`;
-      }
     }
 
     if (page === 'market') {
