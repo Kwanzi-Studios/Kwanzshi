@@ -63,7 +63,8 @@ canvas.chart { width: 100%; height: 220px; display: block; background: var(--pan
 .item:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .item.copied { border-color: var(--up); }
 .item.copied .muted { color: var(--up); }
-.item .pic { width: 96px; height: 96px; object-fit: cover; border-radius: 6px; flex: none; image-rendering: pixelated; }
+.item .pic { width: 96px; height: 96px; object-fit: cover; border-radius: 6px; flex: none; image-rendering: pixelated; border: 2px solid var(--gold); background: var(--panel2); }
+.item .desc { margin: 2px 0 4px; color: var(--ink); font-size: 14px; }
 .item .name { font-size: 18px; font-weight: 600; }
 .item .price { font-family: Consolas, monospace; font-size: 20px; color: var(--gold); margin-left: auto; }
 .item code, .cmd { font-family: Consolas, monospace; background: var(--panel2); padding: 2px 8px; border-radius: 4px; }

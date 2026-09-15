@@ -152,7 +152,7 @@
     }
 
     if (page === 'shop') {
-      $('#items').innerHTML = d.shop.items.length ? d.shop.items.map(it => `<button class="item" type="button" data-cmd="!shop buy ${it.id}" title="click to copy the command">${it.image ? `<img class="pic" src="${esc(it.image)}" alt="">` : ''}<div><div class="name">${esc(it.name)}</div><div class="muted">click to copy <code>!shop buy ${it.id}</code>, then paste it in chat</div></div><div class="price">${kw(it.price)}</div></button>`).join('')
+      $('#items').innerHTML = d.shop.items.length ? d.shop.items.map(it => `<button class="item" type="button" data-cmd="!shop buy ${it.id}" title="click to copy the command">${it.image ? `<img class="pic" src="${esc(it.image)}" alt="">` : ''}<div><div class="name">${esc(it.name)}</div>${it.description ? `<div class="desc">${esc(it.description)}</div>` : ''}<div class="muted">click to copy <code>!shop buy ${it.id}</code>, then paste it in chat</div></div><div class="price">${kw(it.price)}</div></button>`).join('')
         : '<p class="empty">shelf is empty. restocking. allegedly.</p>';
       document.querySelectorAll('.item[data-cmd]').forEach(btn => btn.addEventListener('click', () => {
         const cmd = btn.dataset.cmd, hint = btn.querySelector('.muted'), was = hint.innerHTML;
