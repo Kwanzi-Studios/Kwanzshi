@@ -75,3 +75,9 @@ canvas.chart { width: 100%; height: 220px; display: block; background: var(--pan
 .intro-text { flex: 1; min-width: 0; }
 .intro .coin { flex: none; width: 224px; height: 224px; image-rendering: pixelated; image-rendering: crisp-edges; }
 @media (max-width: 700px) { .intro { flex-direction: column; align-items: flex-start; } .intro .coin { width: 160px; height: 160px; } }
+
+.pager { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin: 12px 0 0; font-size: 13px; }
+.pager button { background: var(--panel); color: var(--muted); border: 1px solid var(--line); border-radius: 5px; padding: 4px 10px; font: inherit; cursor: pointer; }
+.pager button.on { color: var(--ink); border-color: var(--gold); }
+.pager button:disabled { opacity: .4; cursor: default; }
+.pager .muted { margin-left: auto; }

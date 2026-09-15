@@ -101,11 +101,32 @@
     if (page === 'markets') {
       const past = d.markets.filter(m => m.status === 'resolved' || m.status === 'void');
       $('#open').innerHTML = marketRows(open, false);
-      $('#past').innerHTML = marketRows(past, true);
+      const PER = 25, pages = Math.max(1, Math.ceil(past.length / PER));
+      let pg = Math.min(pages, Math.max(1, parseInt(params.get('p') || '1', 10) || 1));
+      const drawPast = () => {
+        const slice = past.slice((pg - 1) * PER, pg * PER);
+        let nav = '';
+        if (pages > 1) {
+          const btn = (n, label, on) => `<button data-p="${n}" class="${on ? 'on' : ''}" ${n < 1 || n > pages ? 'disabled' : ''}>${label}</button>`;
+          const nums = [];
+          for (let n = 1; n <= pages; n++) if (n === 1 || n === pages || Math.abs(n - pg) <= 2) nums.push(n);
+          let last = 0, parts = [];
+          for (const n of nums) { if (n - last > 1) parts.push('<span class="muted">…</span>'); parts.push(btn(n, n, n === pg)); last = n; }
+          nav = `<div class="pager">${btn(pg - 1, 'prev', false)}${parts.join('')}${btn(pg + 1, 'next', false)}<span class="muted">${past.length} settled</span></div>`;
+        }
+        $('#past').innerHTML = marketRows(slice, true) + nav;
+        $('#past').querySelectorAll('.pager button').forEach(b => b.addEventListener('click', () => { pg = parseInt(b.dataset.p, 10); history.replaceState(null, '', 'markets.html?p=' + pg); drawPast(); window.scrollTo({ top: $('#past').offsetTop - 20 }); }));
+      };
+      drawPast();
     }
 
     if (page === 'market') {
       const m = d.markets.find(x => x.id === parseInt(params.get('id'), 10));
+      if (m && m.slim) {
+        document.title = mk(m.id) + ' · Kwanzshi';
+        main.innerHTML = `<h1><span class="mono muted">${mk(m.id)}</span> ${esc(m.title)} ${statusTag(m)}</h1><p class="lede">settled ${m.outcome ? m.outcome.toUpperCase() : ''}${m.settle_rate != null ? ' with KWK at ' + m.settle_rate.toFixed(3) : ''} on ${when(m.resolved_at)}. this one is old enough that the chart and trades aren\'t kept on the site anymore.</p>`;
+        return;
+      }
       if (!m) { main.innerHTML = '<p class="empty">no such market. it might be from before the records started, which was recently, because this is new.</p>'; return; }
       document.title = mk(m.id) + ' · Kwanzshi';
       $('#title').innerHTML = `<span class="mono muted">${mk(m.id)}</span> ${esc(m.title)} ${statusTag(m)}`;
