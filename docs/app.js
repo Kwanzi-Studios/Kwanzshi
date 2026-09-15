@@ -73,7 +73,7 @@
     if (!ms.length) return '<p class="empty">nothing open. i\'m probably about to open one. probably. i forgot what i was doing.</p>';
     return `<div class="tw"><table><thead><tr><th>Market</th><th></th><th class="num">Yes</th><th class="num">No</th><th class="num">${showStatus ? 'Settled' : 'Settles'}</th></tr></thead><tbody>` +
       ms.map(m => `<tr><td class="mono muted"><a href="market.html?id=${m.id}">${mk(m.id)}</a></td><td><a href="market.html?id=${m.id}">${esc(m.title)}</a>${m.kind === 'kalshi' ? '<span class="tag">kalshi</span>' : ''}${showStatus ? statusTag(m) : ''}</td>` +
-        `<td class="num yes">${m.status === 'resolved' ? (m.outcome === 'yes' ? 100 : 0) : m.yes}</td><td class="num no">${m.status === 'resolved' ? (m.outcome === 'no' ? 100 : 0) : m.no}</td>` +
+        `<td class="num yes">${m.status === 'resolved' ? (m.outcome === 'yes' ? 100 : 0) : (m.bid === 1 && m.ask === 99 ? '—' : m.yes)}</td><td class="num no">${m.status === 'resolved' ? (m.outcome === 'no' ? 100 : 0) : (m.bid === 1 && m.ask === 99 ? '—' : m.no)}</td>` +
         `<td class="num muted">${m.status === 'resolved' || m.status === 'void' ? when(m.resolved_at) : ago(m.left)}</td></tr>`).join('') + '</tbody></table></div>';
   }
 
