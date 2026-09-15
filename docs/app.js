@@ -87,7 +87,7 @@
   function render(d) {
     header(d);
     const main = $('#main'); if (!main) return;
-    const open = d.markets.filter(m => m.status === 'open' || m.status === 'closing').sort((a, b) => (a.left == null) - (b.left == null) || (a.left ?? 0) - (b.left ?? 0) || a.id - b.id);
+    const open = d.markets.filter(m => m.status === 'open' || m.status === 'closing').sort((a, b) => (a.kind === 'kalshi') - (b.kind === 'kalshi') || (a.left == null) - (b.left == null) || (a.left ?? 0) - (b.left ?? 0) || a.id - b.id);
 
     if (page === 'home') {
       $('#tiles').innerHTML = [
