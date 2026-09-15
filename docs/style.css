@@ -68,3 +68,8 @@ canvas.chart { width: 100%; height: 220px; display: block; background: var(--pan
 .item code, .cmd { font-family: Consolas, monospace; background: var(--panel2); padding: 2px 8px; border-radius: 4px; }
 .empty { color: var(--muted); padding: 14px; }
 @media (max-width: 600px) { header.top .kwk { margin-left: 0; } h1 { font-size: 24px; } }
+
+.intro { display: flex; align-items: center; gap: 28px; }
+.intro-text { flex: 1; min-width: 0; }
+.intro .coin { flex: none; width: 224px; height: 224px; image-rendering: pixelated; image-rendering: crisp-edges; }
+@media (max-width: 700px) { .intro { flex-direction: column; align-items: flex-start; } .intro .coin { width: 160px; height: 160px; } }
