@@ -6,7 +6,7 @@
   const px = n => (Math.round(n * 10) / 10).toString();
   const when = t => { const d = new Date(t * 1000); return d.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }); };
   const clock = t => new Date(t * 1000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-  const ago = s => { if (s == null) return 'open'; if (s <= 0) return 'settling'; if (s < 90) return Math.floor(s) + 's'; const m = Math.floor(s / 60); return m < 120 ? m + ' min' : Math.floor(m / 60) + 'h ' + (m % 60) + 'm'; };
+  const ago = s => { if (s == null) return 'open'; if (s <= 0) return 'settling'; if (s < 90) return Math.floor(s) + 's'; const m = Math.floor(s / 60); if (m < 120) return m + ' min'; if (s < 172800) return Math.floor(m / 60) + 'h ' + (m % 60) + 'm'; if (s < 1209600) return (s / 86400).toFixed(1) + ' days'; return (s / 604800).toFixed(1) + ' wk'; };
   const mk = id => 'market' + id;
   const page = document.body.dataset.page;
   const params = new URLSearchParams(location.search);
