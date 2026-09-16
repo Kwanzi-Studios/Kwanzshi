@@ -2,8 +2,9 @@
 (function () {
   const $ = (s, el) => (el || document).querySelector(s);
   const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const kw = n => '₭₪' + Math.round(n).toLocaleString();
-  const worth = (n, rate) => Math.round(n * rate).toLocaleString();   // Kwonks × KWK, what they are worth
+  const kw = n => '₭₪' + Math.round(n).toLocaleString();                       // a value in currency
+  const tok = n => Math.round(n).toLocaleString() + ' KWONKS';                 // a count of tokens
+  const worth = (n, rate) => kw(n * rate);                                     // tokens × KWK, what they are worth
   const px = n => (Math.round(n * 10) / 10).toString();
   const when = t => { const d = new Date(t * 1000); return d.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }); };
   const clock = t => new Date(t * 1000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
@@ -82,7 +83,7 @@
     if (!ts.length) return '<p class="empty">no trades yet. be the first. be the legend. be the cautionary tale.</p>';
     return `<div class="tw"><table><thead><tr><th>When</th><th>Who</th><th>What</th>${withMarket ? '<th>Market</th>' : ''}<th class="num">Contracts</th><th class="num">Price</th><th class="num">Kwonks</th></tr></thead><tbody>` +
       ts.map(t => `<tr><td class="muted mono">${clock(t.at)}</td><td><a href="trader.html?name=${encodeURIComponent(t.name)}">${esc(t.name)}</a></td><td>${t.action === 'buy' ? 'bought' : 'sold'} <span class="${t.side}">${t.side === 'yes' ? 'Yes' : 'No'}</span>${t.credit ? ' <span class="tag">on the house</span>' : ''}</td>` +
-        `${withMarket ? `<td class="mono muted"><a href="market.html?id=${t.market_id}">${mk(t.market_id)}</a></td>` : ''}<td class="num">${px(t.contracts)}</td><td class="num">${px(t.avg_price)}</td><td class="num">${kw(t.kwonks)}</td></tr>`).join('') + '</tbody></table></div>';
+        `${withMarket ? `<td class="mono muted"><a href="market.html?id=${t.market_id}">${mk(t.market_id)}</a></td>` : ''}<td class="num">${px(t.contracts)}</td><td class="num">${px(t.avg_price)}</td><td class="num">${tok(t.kwonks)}</td></tr>`).join('') + '</tbody></table></div>';
   }
 
   function render(d) {
@@ -92,7 +93,7 @@
 
     if (page === 'home') {
       $('#tiles').innerHTML = [
-        ['KWK', d.rate.toFixed(3)], ['In circulation', kw(d.circulation)], ['Open markets', open.length], ['Traders', d.leaderboard.length]
+        ['KWK', d.rate.toFixed(3)], ['In circulation', tok(d.circulation)], ['Open markets', open.length], ['Traders', d.leaderboard.length]
       ].map(([k, v]) => `<div class="tile"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
       lineChart($('#kwkchart'), d.kwk_history, { color: '#3ccf7f', fmt: v => v.toFixed(3) });
       $('#markets').innerHTML = marketRows(open, false);
@@ -142,7 +143,7 @@
       $('#trades').innerHTML = tradeRows(m.trades || [], false);
       if (m.settlements && m.settlements.length) {
         $('#settle').innerHTML = `<div class="tw"><table><thead><tr><th>Who</th><th>Side</th><th class="num">Contracts</th><th class="num">Paid</th><th class="num">Got</th><th class="num">Net</th></tr></thead><tbody>` +
-          m.settlements.map(s => { const n = s.payout - s.cost; return `<tr><td><a href="trader.html?name=${encodeURIComponent(s.name)}">${esc(s.name)}</a></td><td class="${s.side}">${s.side === 'yes' ? 'Yes' : 'No'}</td><td class="num">${px(s.contracts)}</td><td class="num">${kw(s.cost)}</td><td class="num">${kw(s.payout)}</td><td class="num ${n >= 0 ? 'pos' : 'neg'}">${n >= 0 ? '+' : ''}${kw(n)}</td></tr>`; }).join('') + '</tbody></table></div>';
+          m.settlements.map(s => { const n = s.payout - s.cost; return `<tr><td><a href="trader.html?name=${encodeURIComponent(s.name)}">${esc(s.name)}</a></td><td class="${s.side}">${s.side === 'yes' ? 'Yes' : 'No'}</td><td class="num">${px(s.contracts)}</td><td class="num">${tok(s.cost)}</td><td class="num">${tok(s.payout)}</td><td class="num ${n >= 0 ? 'pos' : 'neg'}">${n >= 0 ? '+' : ''}${tok(n)}</td></tr>`; }).join('') + '</tbody></table></div>';
       } else { const sw = $('#settlewrap'); if (sw) sw.hidden = true; }
       $('#cmd').innerHTML = m.status === 'open' ? `Get in: <span class="cmd">!buy ${mk(m.id)} yes 50</span> or <span class="cmd">!buy ${mk(m.id)} no 50</span>` : '';
     }
@@ -150,7 +151,7 @@
     if (page === 'leaderboard') {
       const rows = d.leaderboard;
       $('#board').innerHTML = rows.length ? `<div class="tw"><table><thead><tr><th class="rank">#</th><th>Trader</th><th class="num">Equity</th><th class="num">Worth</th><th class="num">Balance</th><th class="num">Net P&amp;L</th><th class="num">Record</th></tr></thead><tbody>` +
-        rows.map((r, i) => `<tr><td class="rank mono">${i + 1}</td><td><a href="trader.html?name=${encodeURIComponent(r.name)}">${esc(r.name)}</a>${r.gold ? ' <span class="gold">★</span>' : ''}</td><td class="num">${kw(r.equity)}</td><td class="num muted" title="equity × KWK ${d.rate.toFixed(3)}">${worth(r.equity, d.rate)}</td><td class="num">${kw(r.balance)}</td><td class="num ${r.pnl >= 0 ? 'pos' : 'neg'}">${r.pnl >= 0 ? '+' : ''}${kw(r.pnl)}</td><td class="num muted">${r.wins}–${r.losses}</td></tr>`).join('') + '</tbody></table></div>'
+        rows.map((r, i) => `<tr><td class="rank mono">${i + 1}</td><td><a href="trader.html?name=${encodeURIComponent(r.name)}">${esc(r.name)}</a>${r.gold ? ' <span class="gold">★</span>' : ''}</td><td class="num">${tok(r.equity)}</td><td class="num muted" title="equity × KWK ${d.rate.toFixed(3)}">${worth(r.equity, d.rate)}</td><td class="num">${tok(r.balance)}</td><td class="num ${r.pnl >= 0 ? 'pos' : 'neg'}">${r.pnl >= 0 ? '+' : ''}${tok(r.pnl)}</td><td class="num muted">${r.wins}–${r.losses}</td></tr>`).join('') + '</tbody></table></div>'
         : '<p class="empty">nobody\'s traded yet. the top spot is wide open and honestly it\'s embarrassing for everyone.</p>';
     }
 
@@ -160,10 +161,10 @@
       if (!t) { main.innerHTML = `<p class="empty">no trader called ${esc(name)}. say something in chat and you'll exist. that's how it works here.</p>`; return; }
       document.title = t.name + ' · Kwanzshi';
       $('#title').innerHTML = esc(t.name) + (t.gold ? ' <span class="gold">★ Gold Card holder</span>' : '');
-      $('#tiles').innerHTML = [['Equity', kw(t.equity)], ['Worth at KWK ' + d.rate.toFixed(3), worth(t.equity, d.rate)], ['Balance', kw(t.balance)], ['Net P&L', (t.pnl >= 0 ? '+' : '') + kw(t.pnl)], ['Record', t.wins + '–' + t.losses]]
+      $('#tiles').innerHTML = [['Equity', tok(t.equity)], ['Worth at KWK ' + d.rate.toFixed(3), worth(t.equity, d.rate)], ['Balance', tok(t.balance)], ['Net P&L', (t.pnl >= 0 ? '+' : '') + tok(t.pnl)], ['Record', t.wins + '–' + t.losses]]
         .map(([k, v]) => `<div class="tile"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
       $('#positions').innerHTML = t.positions.length ? `<div class="tw"><table><thead><tr><th>Market</th><th>Side</th><th class="num">Contracts</th><th class="num">Avg cost</th><th class="num">Worth now</th><th class="num">Pays if right</th></tr></thead><tbody>` +
-        t.positions.map(p => `<tr><td><a href="market.html?id=${p.market_id}">${mk(p.market_id)}</a> <span class="muted">${esc(p.title)}</span></td><td class="${p.side}">${p.side === 'yes' ? 'Yes' : 'No'}</td><td class="num">${px(p.contracts)}</td><td class="num">${px(p.avg_cost)}</td><td class="num">${kw(p.value)}</td><td class="num">${kw(p.contracts * 100)}</td></tr>`).join('') + '</tbody></table></div>'
+        t.positions.map(p => `<tr><td><a href="market.html?id=${p.market_id}">${mk(p.market_id)}</a> <span class="muted">${esc(p.title)}</span></td><td class="${p.side}">${p.side === 'yes' ? 'Yes' : 'No'}</td><td class="num">${px(p.contracts)}</td><td class="num">${px(p.avg_cost)}</td><td class="num">${tok(p.value)}</td><td class="num">${tok(p.contracts * 100)}</td></tr>`).join('') + '</tbody></table></div>'
         : '<p class="empty">no open positions.</p>';
       $('#trades').innerHTML = tradeRows(t.trades, true);
     }
@@ -178,7 +179,7 @@
         if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(cmd).then(done, fallback); else fallback();
       }));
       $('#buys').innerHTML = d.shop.purchases.length ? `<div class="tw"><table><thead><tr><th>When</th><th>Who</th><th>Bought</th><th class="num">Paid</th></tr></thead><tbody>` +
-        d.shop.purchases.map(p => `<tr><td class="muted mono">${when(p.at)}</td><td><a href="trader.html?name=${encodeURIComponent(p.name)}">${esc(p.name)}</a></td><td>${esc(p.item)}</td><td class="num">${kw(p.price)}</td></tr>`).join('') + '</tbody></table></div>'
+        d.shop.purchases.map(p => `<tr><td class="muted mono">${when(p.at)}</td><td><a href="trader.html?name=${encodeURIComponent(p.name)}">${esc(p.name)}</a></td><td>${esc(p.item)}</td><td class="num">${tok(p.price)}</td></tr>`).join('') + '</tbody></table></div>'
         : '<p class="empty">nobody\'s bought anything yet. the gold card is still on the shelf. staring at you. it knows.</p>';
     }
   }
