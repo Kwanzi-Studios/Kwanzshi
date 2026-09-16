@@ -182,3 +182,13 @@
     }
   }
 })();
+
+
+// popups: any [data-dialog="id"] opens <dialog id>, [data-close] or a click on the backdrop closes it
+document.addEventListener('click', e => {
+  const opener = e.target.closest('[data-dialog]');
+  if (opener) { const d = document.getElementById(opener.dataset.dialog); if (d && d.showModal) d.showModal(); return; }
+  const closer = e.target.closest('[data-close]');
+  if (closer) { const d = closer.closest('dialog'); if (d) d.close(); return; }
+  if (e.target instanceof HTMLDialogElement && e.target.open) e.target.close();   // backdrop
+});
