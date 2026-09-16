@@ -151,7 +151,7 @@
     if (page === 'leaderboard') {
       const rows = d.leaderboard;
       $('#board').innerHTML = rows.length ? `<div class="tw"><table><thead><tr><th class="rank">#</th><th>Trader</th><th class="num">Equity</th><th class="num">Worth</th><th class="num">Balance</th><th class="num">Net P&amp;L</th><th class="num">Record</th></tr></thead><tbody>` +
-        rows.map((r, i) => `<tr><td class="rank mono">${i + 1}</td><td><a href="trader.html?name=${encodeURIComponent(r.name)}">${esc(r.name)}</a>${r.gold ? ' <span class="gold">★</span>' : ''}</td><td class="num">${tok(r.equity)}</td><td class="num muted" title="equity × KWK ${d.rate.toFixed(3)}">${worth(r.equity, d.rate)}</td><td class="num">${tok(r.balance)}</td><td class="num ${r.pnl >= 0 ? 'pos' : 'neg'}">${r.pnl >= 0 ? '+' : ''}${tok(r.pnl)}</td><td class="num muted">${r.wins}–${r.losses}</td></tr>`).join('') + '</tbody></table></div>'
+        rows.map((r, i) => `<tr><td class="rank mono">${i + 1}</td><td><a href="trader.html?name=${encodeURIComponent(r.name)}">${esc(r.name)}</a>${r.gold ? ' <span class="gold">★</span>' : ''}</td><td class="num">${tok(r.equity)}</td><td class="num muted" title="balance × KWK ${d.rate.toFixed(3)}">${worth(r.balance, d.rate)}</td><td class="num">${tok(r.balance)}</td><td class="num ${r.pnl >= 0 ? 'pos' : 'neg'}">${r.pnl >= 0 ? '+' : ''}${tok(r.pnl)}</td><td class="num muted">${r.wins}–${r.losses}</td></tr>`).join('') + '</tbody></table></div>'
         : '<p class="empty">nobody\'s traded yet. the top spot is wide open and honestly it\'s embarrassing for everyone.</p>';
     }
 
@@ -161,7 +161,7 @@
       if (!t) { main.innerHTML = `<p class="empty">no trader called ${esc(name)}. say something in chat and you'll exist. that's how it works here.</p>`; return; }
       document.title = t.name + ' · Kwanzshi';
       $('#title').innerHTML = esc(t.name) + (t.gold ? ' <span class="gold">★ Gold Card holder</span>' : '');
-      $('#tiles').innerHTML = [['Equity', tok(t.equity)], ['Worth at KWK ' + d.rate.toFixed(3), worth(t.equity, d.rate)], ['Balance', tok(t.balance)], ['Net P&L', (t.pnl >= 0 ? '+' : '') + tok(t.pnl)], ['Record', t.wins + '–' + t.losses]]
+      $('#tiles').innerHTML = [['Equity', tok(t.equity)], ['Worth at KWK ' + d.rate.toFixed(3), worth(t.balance, d.rate)], ['Balance', tok(t.balance)], ['Net P&L', (t.pnl >= 0 ? '+' : '') + tok(t.pnl)], ['Record', t.wins + '–' + t.losses]]
         .map(([k, v]) => `<div class="tile"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
       $('#positions').innerHTML = t.positions.length ? `<div class="tw"><table><thead><tr><th>Market</th><th>Side</th><th class="num">Contracts</th><th class="num">Avg cost</th><th class="num">Worth now</th><th class="num">Pays if right</th></tr></thead><tbody>` +
         t.positions.map(p => `<tr><td><a href="market.html?id=${p.market_id}">${mk(p.market_id)}</a> <span class="muted">${esc(p.title)}</span></td><td class="${p.side}">${p.side === 'yes' ? 'Yes' : 'No'}</td><td class="num">${px(p.contracts)}</td><td class="num">${px(p.avg_cost)}</td><td class="num">${tok(p.value)}</td><td class="num">${tok(p.contracts * 100)}</td></tr>`).join('') + '</tbody></table></div>'
