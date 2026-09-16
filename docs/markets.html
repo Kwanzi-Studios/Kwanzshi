@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Markets · Kwanzshi</title>
-<link rel="stylesheet" href="style.css?v=1789572638">
+<link rel="stylesheet" href="style.css?v=1789572643">
 </head>
 <body data-page="markets">
 <div class="wrap">
@@ -32,7 +32,9 @@
 <h3>open one</h3>
 <h4>created markets</h4>
 <dl class="cmds">
-<dt>!market create "Question?" 20 30</dt><dd>the question in quotes, then the starting yes price, then minutes until trading stops. leave the numbers off for 50 and no time limit.</dd>
+<dt>!market create "Question?"</dt><dd>open ended. no clock. trading runs until you close or resolve it. yes starts at 50.</dd>
+<dt>!market create "Question?" 20</dt><dd>same, with yes starting at 20 instead of 50.</dd>
+<dt>!market create "Question?" 20 30</dt><dd>with a clock. trading stops on its own after 30 minutes, then you resolve it.</dd>
 </dl>
 <h4>kalshi markets</h4>
 <dl class="cmds">
@@ -59,6 +61,6 @@
 <p class="stamp" id="stamp"></p>
 <p class="stamp">KWONKS are the future. buy now. kwanzshi is not kalshi (it's better). live at <a href="https://twitch.tv/kwanzi">kwanzi</a> on twitch</p>
 </div>
-<script src="app.js?v=1789572638"></script>
+<script src="app.js?v=1789572643"></script>
 </body>
 </html>
