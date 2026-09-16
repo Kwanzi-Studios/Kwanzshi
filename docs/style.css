@@ -95,4 +95,10 @@ button.sidecard { font: inherit; cursor: pointer; }
 .modal-head h2 { margin: 0; }
 .modal .close { background: none; border: 0; color: var(--muted); font-size: 26px; line-height: 1; cursor: pointer; padding: 0 4px; }
 .modal .close:hover { color: var(--ink); }
-.modal p { margin: 12px 0 0; line-height: 1.5; }
+.modal h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 22px 0 8px; }
+.cmds { display: grid; grid-template-columns: max-content 1fr; gap: 10px 18px; margin: 0; align-items: baseline; }
+.cmds dt { font-family: Consolas, monospace; font-size: 14px; color: var(--gold); white-space: nowrap; }
+.cmds dd { margin: 0; color: var(--ink); font-size: 14px; line-height: 1.4; }
+.cmds code { font-family: Consolas, monospace; color: var(--gold); background: none; padding: 0; }
+.rules { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.6; }
+@media (max-width: 600px) { .cmds { grid-template-columns: 1fr; gap: 4px; } .cmds dd { margin-bottom: 10px; } .cmds dt { white-space: normal; } }
