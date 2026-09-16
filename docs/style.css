@@ -103,5 +103,4 @@ button.sidecard { font: inherit; cursor: pointer; }
 .cmds dt { font-family: Consolas, monospace; font-size: 14px; color: var(--gold); white-space: nowrap; }
 .cmds dd { margin: 0; color: var(--ink); font-size: 14px; line-height: 1.4; }
 .cmds code { font-family: Consolas, monospace; color: var(--gold); background: none; padding: 0; }
-.rules { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.6; }
 @media (max-width: 600px) { .cmds { grid-template-columns: 1fr; gap: 4px; } .cmds dd { margin-bottom: 10px; } .cmds dt { white-space: normal; } }
