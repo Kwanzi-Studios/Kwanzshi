@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Markets · Kwanzshi</title>
-<link rel="stylesheet" href="style.css?v=1789572175">
+<link rel="stylesheet" href="style.css?v=1789572181">
 </head>
 <body data-page="markets">
 <div class="wrap">
@@ -25,8 +25,16 @@
 <h1>markets</h1>
 <p class="lede">see all markets ever put up on stream here. the running list that updates every minute.</p>
 </div>
-<a class="sidecard" href="how.html#mods"><span class="big">mod? learn how to make markets</span><span class="small">the commands, the rules, all from chat ↗</span></a>
+<button class="sidecard" type="button" data-dialog="modhelp"><span class="big">mod? learn how to make markets</span><span class="small">the commands, the rules, all from chat</span></button>
 </div>
+<dialog class="modal" id="modhelp">
+<div class="modal-head"><h2>mods: making markets</h2><button class="close" type="button" data-close aria-label="close">×</button></div>
+<p>mods make the markets, from chat, with <span class="cmd">!market</span>. three kinds.</p>
+<p><b>called markets.</b> anything you can answer yes or no to later. <span class="cmd">!market create "New PB today?" 20 30</span> puts up the question with yes starting at 20 and a 30 minute clock. the title goes in quotes. the first number is the starting yes price (skip it and it's 50). the second is minutes until trading stops (skip it and it runs until you close it). add <span class="cmd">thin</span>, <span class="cmd">normal</span> or <span class="cmd">deep</span> at the end to set how much is on the shelf at each price: thin moves fast, deep takes a lot to move. these don't settle themselves. when the answer is in, <span class="cmd">!market resolve market2 yes</span> or <span class="cmd">no</span> pays everyone out.</p>
+<p><b>KWK markets.</b> a bet on the rate. <span class="cmd">!market kwk above 1.05 in 30 min</span> or <span class="cmd">!market kwk below 0.95 in 2 hours</span>. these settle themselves by checking the actual number when the clock hits. nothing else to do.</p>
+<p><b>kalshi mirrors.</b> real markets with real prices, mirrored here. <span class="cmd">!market kalshi giants</span> searches. it shows the best match, and <span class="cmd">!market kalshi create</span> opens it. or paste a kalshi link. an event link with several markets under it gives you <span class="cmd">!market kalshi list</span> to pick one by number, or <span class="cmd">!market kalshi create all</span> to open every one. mirrors settle themselves when kalshi does.</p>
+<p><b>the rules.</b> ask something with one clear yes or no answer, and say when it's decided. resolve called markets as soon as the answer is in, people are waiting on their KWONKS. <span class="cmd">!market close market2</span> stops trading early but leaves it open to resolve later. if it turns out the question was broken, <span class="cmd">!market void market2</span> gives everyone back what they paid, no harm done. markets with a clock stop trading a minute before it runs out so nobody snipes the ending. every contract pays ₭₪100 when it's right, that part is never up to you.</p>
+</dialog>
 <h2>open</h2>
 <div id="open"></div>
 <h2>settled</h2>
@@ -35,6 +43,6 @@
 <p class="stamp" id="stamp"></p>
 <p class="stamp">KWONKS are the future. buy now. kwanzshi is not kalshi (it's better). live at <a href="https://twitch.tv/kwanzi">kwanzi</a> on twitch</p>
 </div>
-<script src="app.js?v=1789572175"></script>
+<script src="app.js?v=1789572181"></script>
 </body>
 </html>
