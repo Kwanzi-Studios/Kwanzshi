@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Markets · Kwanzshi</title>
-<link rel="stylesheet" href="style.css?v=1789572987">
+<link rel="stylesheet" href="style.css?v=1789572997">
 </head>
 <body data-page="markets">
 <div class="wrap">
@@ -35,11 +35,14 @@
 <dl class="cmds">
 <dt>!market create "Question?"</dt><dd>open ended. no clock. trading runs until you close or resolve it. yes starts at 50.</dd>
 <dt>!market create "Question?" 20</dt><dd>same, with yes starting at 20 instead of 50.</dd>
-<dt>!market create "Question?" 20 30</dt><dd>with a clock. trading stops on its own after 30 minutes, then you resolve it.</dd>
+<dt>!market create "Question?" 20 30</dt><dd>with a clock. after 30 minutes it settles itself: yes if a mod resolved it yes before time ran out, otherwise no, it didn't happen.</dd>
 </dl>
 <h4>kalshi markets</h4>
+<p class="note">a copy of a real market on kalshi.com. it follows Kalshi's live price and settles itself when Kalshi does. two steps: find it, then open it.</p>
 <dl class="cmds">
-<dt>!market kalshi giants</dt><dd>search real Kalshi markets, then <code>!market kalshi create</code> to open the match. pasting a Kalshi link works too.</dd>
+<dt>!market kalshi giants win</dt><dd>step 1. search with a few words. the bot shows the closest match.</dd>
+<dt>!market kalshi https://kalshi.com/...</dt><dd>step 1, the other way. paste the market's link instead of searching.</dd>
+<dt>!market kalshi create</dt><dd>step 2. opens the market it just showed you. not the right one? search again first.</dd>
 </dl>
 <h3>run it</h3>
 <dl class="cmds">
@@ -62,6 +65,6 @@
 <p class="stamp" id="stamp"></p>
 <p class="stamp">KWONKS are the future. buy now. kwanzshi is not kalshi (it's better). live at <a href="https://twitch.tv/kwanzi">kwanzi</a> on twitch</p>
 </div>
-<script src="app.js?v=1789572987"></script>
+<script src="app.js?v=1789572997"></script>
 </body>
 </html>
