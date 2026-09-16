@@ -169,6 +169,15 @@
       $('#trades').innerHTML = tradeRows(t.trades, true);
     }
 
+    if (page === 'giveaways') {
+      const g = d.giveaways || { open: null, wins: [] };
+      $('#giveaway').innerHTML = g.open
+        ? `<div class="giveaway live">${g.open.image ? `<img class="pic" src="${esc(g.open.image)}" alt="">` : ''}<div><div class="tag">open now</div><div class="name">${esc(g.open.item)}</div>${g.open.description ? `<div class="desc">${esc(g.open.description)}</div>` : ''}<div class="muted">${kw(g.open.price)} in the shop · <b>${g.open.entries}</b> entered · type <code>!enter</code> in chat</div></div></div>`
+        : `<div class="giveaway"><div class="muted">nothing open right now. watch chat, they come up live.</div></div>`;
+      $('#wins').innerHTML = g.wins.length ? `<div class="tw"><table><thead><tr><th>When</th><th>Winner</th><th>Won</th></tr></thead><tbody>` +
+        g.wins.map(w => `<tr><td class="muted mono">${when(w.at)}</td><td><a href="trader.html?name=${encodeURIComponent(w.name)}">${esc(w.name)}</a></td><td>${w.image ? `<img class="mini" src="${esc(w.image)}" alt=""> ` : ''}${esc(w.item)}</td></tr>`).join('') + '</tbody></table></div>'
+        : '<p class="empty">no winners yet.</p>';
+    }
     if (page === 'shop') {
       $('#items').innerHTML = d.shop.items.length ? [...d.shop.items].sort((a, b) => a.price - b.price).map(it => `<button class="item" type="button" data-cmd="!shop buy ${it.id}" title="click to copy the command">${it.image ? `<img class="pic" src="${esc(it.image)}" alt="">` : ''}<div><div class="name">${esc(it.name)}</div>${it.description ? `<div class="desc">${esc(it.description)}</div>` : ''}${it.yield ? `<div class="desc">Pays ${kw(it.yield)} every day you own it</div>` : ''}${it.once ? `<div class="muted">one per viewer</div>` : ''}${it.supply != null ? `<div class="muted">${it.left > 0 ? `${it.left} of ${it.supply} left` : 'sold out'}</div>` : ''}<div class="muted">click to copy <code>!shop buy ${it.id}</code>, then paste it in chat</div></div><div class="price">${kw(it.price)}</div></button>`).join('')
         : '<p class="empty">shelf is empty. restocking. allegedly.</p>';
