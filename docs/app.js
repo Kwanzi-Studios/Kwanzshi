@@ -179,7 +179,19 @@
         : '<p class="empty">no winners yet.</p>';
     }
     if (page === 'shop') {
-      $('#items').innerHTML = d.shop.items.length ? [...d.shop.items].sort((a, b) => a.price - b.price).map(it => `<button class="item" type="button" data-cmd="!shop buy ${it.id}" title="click to copy the command">${it.image ? `<img class="pic" src="${esc(it.image)}" alt="">` : ''}<div><div class="name">${esc(it.name)}</div>${it.description ? `<div class="desc">${esc(it.description)}</div>` : ''}${it.yield ? `<div class="desc">Pays ${kw(it.yield)} every day you own it</div>` : ''}${it.once ? `<div class="muted">one per viewer</div>` : ''}${it.supply != null ? `<div class="muted">${it.left > 0 ? `${it.left} of ${it.supply} left` : 'sold out'}</div>` : ''}<div class="muted">click to copy <code>!shop buy ${it.id}</code>, then paste it in chat</div></div><div class="price">${kw(it.price)}</div></button>`).join('')
+      // category tabs: All first and by default, then each category that has items. the hash remembers the tab (#cards)
+      const CATS = ['Viewer Rewards', 'Cards', 'Assets'];
+      const slug = c => c.toLowerCase().replace(/\s+/g, '-');
+      const have = ['All', ...CATS.filter(c => d.shop.items.some(it => (it.category || 'Viewer Rewards') === c))];
+      const want = location.hash.replace('#', '');
+      const cat = have.find(c => slug(c) === want) || 'All';
+      $('#cats').innerHTML = have.map(c => `<a href="#${slug(c)}" class="${c === cat ? 'here' : ''}" data-cat="${esc(c)}">${esc(c)}</a>`).join('');
+      if (!$('#cats').dataset.wired) {
+        $('#cats').dataset.wired = '1';
+        window.addEventListener('hashchange', () => render(d));
+      }
+      const shown = cat === 'All' ? d.shop.items : d.shop.items.filter(it => (it.category || 'Viewer Rewards') === cat);
+      $('#items').innerHTML = shown.length ? [...shown].sort((a, b) => a.price - b.price).map(it => `<button class="item" type="button" data-cmd="!shop buy ${it.id}" title="click to copy the command">${it.image ? `<img class="pic" src="${esc(it.image)}" alt="">` : ''}<div><div class="name">${esc(it.name)}</div>${it.description ? `<div class="desc">${esc(it.description)}</div>` : ''}${it.yield ? `<div class="desc">Pays ${kw(it.yield)} every day you own it</div>` : ''}${it.once ? `<div class="muted">one per viewer</div>` : ''}${it.supply != null ? `<div class="muted">${it.left > 0 ? `${it.left} of ${it.supply} left` : 'sold out'}</div>` : ''}<div class="muted">click to copy <code>!shop buy ${it.id}</code>, then paste it in chat</div></div><div class="price">${kw(it.price)}</div></button>`).join('')
         : '<p class="empty">shelf is empty. restocking. allegedly.</p>';
       document.querySelectorAll('.item[data-cmd]').forEach(btn => btn.addEventListener('click', () => {
         const cmd = btn.dataset.cmd, hint = btn.querySelector('.muted'), was = hint.innerHTML;

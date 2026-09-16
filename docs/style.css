@@ -114,3 +114,7 @@ button.sidecard { font: inherit; cursor: pointer; }
 .giveaway code { font-family: Consolas, monospace; background: var(--panel2); padding: 2px 8px; border-radius: 4px; }
 .mini { width: 22px; height: 22px; object-fit: contain; vertical-align: middle; }
 @media (max-width: 600px) { .giveaway { flex-direction: column; align-items: flex-start; } }
+
+nav.subnav { border-bottom: 0; padding-bottom: 0; margin: 0 0 14px; gap: 6px; }
+nav.subnav a { font-size: 14px; padding: 5px 12px; border: 1px solid var(--line); }
+nav.subnav a.here { border-color: var(--gold); }
