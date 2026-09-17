@@ -117,6 +117,12 @@ button.sidecard { font: inherit; cursor: pointer; }
 
 .wearing { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--gold); border-radius: 4px; padding: 1px 7px; margin-left: 8px; vertical-align: 2px; white-space: nowrap; }
 h1 .wearing { font-size: 13px; vertical-align: 6px; }
+.notme { font-size: 12px; font-weight: 400; color: var(--muted); margin-left: 10px; vertical-align: 6px; }
+.who { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 10px; }
+.who input { flex: 1; min-width: 200px; max-width: 320px; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 9px 12px; font: inherit; }
+.who input:focus { outline: none; border-color: var(--gold); }
+.who button { background: var(--panel); color: var(--gold); border: 1px solid var(--gold); border-radius: 6px; padding: 9px 16px; font: inherit; font-weight: 600; cursor: pointer; }
+.who button:hover { background: var(--panel2); }
 .titles { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 8px; }
 .ttl { background: var(--panel); border: 1px solid var(--line); border-radius: 5px; padding: 4px 10px; font-weight: 600; }
 .ttl.on { border-color: var(--gold); color: var(--gold); }

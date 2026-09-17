@@ -13,6 +13,13 @@
   const page = document.body.dataset.page;
   const params = new URLSearchParams(location.search);
 
+  // "My Portfolio": there is no login, so this browser just remembers which trader you said you are
+  const ME_KEY = 'kwanzshi_me';
+  const me = (() => { try { return localStorage.getItem(ME_KEY) || ''; } catch (e) { return ''; } })();
+  const meLink = $('#me');
+  if (meLink && me) meLink.href = 'trader.html?name=' + encodeURIComponent(me);
+  const navMine = () => { document.querySelectorAll('nav a.here').forEach(a => a.classList.remove('here')); if (meLink) meLink.classList.add('here'); };
+
   fetch('data.json?_=' + Date.now()).then(r => r.json()).then(render).catch(() => {
     const m = $('#main'); if (m) m.innerHTML = '<p class="empty">exchange is offline. kwonks are still worth whatever you believe they are, which is the whole idea.</p>';
   });
@@ -175,10 +182,33 @@
 
     if (page === 'trader') {
       const name = params.get('name') || '';
-      const t = d.traders[name] || d.traders[Object.keys(d.traders).find(k => k.toLowerCase() === name.toLowerCase())];
+      const find = n => d.traders[n] || d.traders[Object.keys(d.traders).find(k => k.toLowerCase() === n.toLowerCase())];
+      if (!name) {
+        // My Portfolio with no name: go to the remembered trader, or ask once
+        if (me && find(me)) { location.replace('trader.html?name=' + encodeURIComponent(find(me).name)); return; }
+        navMine();
+        document.title = 'My Portfolio · Kwanzshi';
+        main.innerHTML = `<h1>my portfolio</h1><p class="lede">type your twitch name once and this browser remembers it. it's not a login. everything here is public anyway, this just saves you finding yourself on the leaderboard.</p>` +
+          `<form class="who" id="who"><input id="whoname" placeholder="your twitch name" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="40"><button type="submit">that's me</button></form><p class="muted" id="whonote"></p>`;
+        $('#who').addEventListener('submit', e => {
+          e.preventDefault();
+          const n = $('#whoname').value.trim().replace(/^@/, '');
+          if (!n) return;
+          const hit = find(n);
+          if (!hit) { $('#whonote').textContent = 'no trader called ' + n + ' yet. make a trade or buy some KWONKS in chat first, then come back.'; return; }
+          try { localStorage.setItem(ME_KEY, hit.name); } catch (err) { /* private window: it just will not be remembered */ }
+          location.href = 'trader.html?name=' + encodeURIComponent(hit.name);
+        });
+        return;
+      }
+      const t = find(name);
       if (!t) { main.innerHTML = `<p class="empty">no trader called ${esc(name)}. say something in chat and you'll exist. that's how it works here.</p>`; return; }
+      const mine = !!me && t.name.toLowerCase() === me.toLowerCase();
+      if (mine) navMine();
       document.title = t.name + ' · Kwanzshi';
-      $('#title').innerHTML = esc(t.name) + (t.title ? ` <span class="wearing">${esc(t.title)}</span>` : '') + (t.gold ? ' <span class="gold">★ Gold Card holder</span>' : '');
+      $('#title').innerHTML = esc(t.name) + (t.title ? ` <span class="wearing">${esc(t.title)}</span>` : '') + (t.gold ? ' <span class="gold">★ Gold Card holder</span>' : '') + (mine ? ' <a class="notme" id="notme" href="trader.html">not you?</a>' : '');
+      const nm = $('#notme');
+      if (nm) nm.addEventListener('click', () => { try { localStorage.removeItem(ME_KEY); } catch (err) { /* nothing to forget */ } });
       $('#tiles').innerHTML = [['Equity', tok(t.equity)], ['Worth at KWK ' + d.rate.toFixed(3), worth(t.balance, d.rate)], ['Balance', tok(t.balance)], ['Net P&L', (t.pnl >= 0 ? '+' : '') + tok(t.pnl)], ['Record', t.wins + '–' + t.losses]]
         .map(([k, v]) => `<div class="tile"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
       $('#positions').innerHTML = t.positions.length ? `<div class="tw"><table><thead><tr><th>Market</th><th>Side</th><th class="num">Contracts</th><th class="num">Avg cost</th><th class="num">Worth now</th><th class="num">Pays if right</th></tr></thead><tbody>` +
