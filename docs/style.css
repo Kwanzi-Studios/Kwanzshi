@@ -123,6 +123,11 @@ h1 .wearing { font-size: 13px; vertical-align: 6px; }
 .who input:focus { outline: none; border-color: var(--gold); }
 .who button { background: var(--panel); color: var(--gold); border: 1px solid var(--gold); border-radius: 6px; padding: 9px 16px; font: inherit; font-weight: 600; cursor: pointer; }
 .who button:hover { background: var(--panel2); }
+.assets { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; margin: 0 0 8px; }
+.asset { position: relative; background: var(--panel); border-radius: 8px; padding: 10px 8px 8px; text-align: center; }
+.asset img, .asset .noimg { width: 72px; height: 72px; object-fit: cover; border-radius: 6px; border: 2px solid var(--gold); background: var(--panel2); image-rendering: pixelated; display: block; margin: 0 auto 6px; }
+.asset .n { font-size: 12px; font-weight: 600; line-height: 1.25; }
+.asset .q { position: absolute; top: 4px; right: 6px; font-family: Consolas, monospace; font-size: 13px; font-weight: 700; color: var(--gold); background: var(--bg); border: 1px solid var(--gold); border-radius: 10px; padding: 0 7px; }
 .titles { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 8px; }
 .ttl { background: var(--panel); border: 1px solid var(--line); border-radius: 5px; padding: 4px 10px; font-weight: 600; }
 .ttl.on { border-color: var(--gold); color: var(--gold); }

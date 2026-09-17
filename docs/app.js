@@ -215,6 +215,12 @@
         t.positions.map(p => `<tr><td><a href="market.html?id=${p.market_id}">${mk(p.market_id)}</a> <span class="muted">${esc(p.title)}</span></td><td class="${p.side}">${p.side === 'yes' ? 'Yes' : 'No'}</td><td class="num">${px(p.contracts)}</td><td class="num">${px(p.avg_cost)}</td><td class="num">${tok(p.value)}</td><td class="num">${tok(p.contracts * 100)}</td></tr>`).join('') + '</tbody></table></div>'
         : '<p class="empty">no open positions.</p>';
       $('#trades').innerHTML = tradeRows(t.trades, true);
+      // assets: a small panel each, the picture and how many are owned. hover says how it pays
+      const as = t.assets || [], aw = $('#assets');
+      if (aw) aw.innerHTML = as.length
+        ? `<div class="assets">${as.map(a => `<div class="asset" title="${esc(a.pays)}${a.earned > 0 ? ' · earned ' + kw(a.earned) + ' so far' : ''}">${a.image ? `<img src="${esc(a.image)}" alt="">` : '<div class="noimg"></div>'}<div class="n">${esc(a.name)}</div><div class="q">×${Math.round(a.qty).toLocaleString()}</div></div>`).join('')}</div>` +
+          `<p class="muted">earning about ${kw(as.reduce((n, a) => n + (a.stream ? 0 : a.per_day), 0))} a day${as.some(a => a.stream) ? ', plus stream income whenever a stream ends' : ''}.</p>`
+        : '<p class="empty">no assets yet. find them in the <a href="shop.html#assets">shop</a>.</p>';
       const owned = t.titles || [];
       $('#titles').innerHTML = owned.length
         ? `<div class="titles">${owned.map(n => `<span class="ttl${n === t.title ? ' on' : ''}">${esc(n)}</span>`).join('')}</div><p class="muted">wear one with <span class="cmd">!title name</span> in chat. <span class="cmd">!title off</span> for none.</p>`
