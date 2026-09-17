@@ -86,6 +86,24 @@
         `${withMarket ? `<td class="mono muted"><a href="market.html?id=${t.market_id}">${mk(t.market_id)}</a></td>` : ''}<td class="num">${px(t.contracts)}</td><td class="num">${px(t.avg_price)}</td><td class="num">${tok(t.kwonks)}</td></tr>`).join('') + '</tbody></table></div>';
   }
 
+  function achievementRows(lines, mine) {
+    // every line with this trader's progress: tier pips (gold ring = that tier gives a title), a bar toward the next tier, what it pays
+    if (!lines.length) return '<p class="empty">no achievements yet.</p>';
+    const num = (l, n) => l.money ? kw(n) : Math.round(n).toLocaleString();
+    const reads = (l, n) => l.what.replace('{n}', num(l, n)).replace('{s}', Math.round(n) === 1 ? '' : 's');
+    return `<div class="tw"><table><thead><tr><th>Achievement</th><th>Progress</th><th class="num">Tier</th><th class="num">Next reward</th></tr></thead><tbody>` +
+      lines.map(l => {
+        const [val, got] = mine[l.id] || [0, 0];
+        const next = l.tiers[got], done = !next;
+        const pct = done ? 100 : Math.max(0, Math.min(100, val / next.at * 100));
+        const pips = l.tiers.map((x, i) => `<b class="${i < got ? 'got' : ''}${x.title ? ' t' : ''}" title="${esc(l.name)} ${i + 1}: ${esc(reads(l, x.at))} · ${kw(x.kwonks)}${x.title ? ' · title ' + esc(x.title) + (x.held ? ' (while held)' : '') : ''}"></b>`).join('');
+        return `<tr><td><b>${esc(l.name)}</b><div class="muted">${esc(reads(l, val))}</div></td>` +
+          `<td><div class="bar${done ? ' done' : ''}"><i style="width:${pct}%"></i></div><span class="muted mono">${done ? 'all tiers earned' : num(l, val) + ' / ' + num(l, next.at)}</span></td>` +
+          `<td class="num"><span class="pips">${pips}</span>${got} of ${l.tiers.length}</td>` +
+          `<td class="num">${done ? '<span class="muted">—</span>' : kw(next.kwonks) + (next.title ? `<div class="gold">${esc(next.title)}</div>` : '')}</td></tr>`;
+      }).join('') + '</tbody></table></div>';
+  }
+
   function render(d) {
     header(d);
     const main = $('#main'); if (!main) return;
@@ -151,7 +169,7 @@
     if (page === 'leaderboard') {
       const rows = d.leaderboard;
       $('#board').innerHTML = rows.length ? `<div class="tw"><table><thead><tr><th class="rank">#</th><th>Trader</th><th class="num">Equity</th><th class="num">Worth</th><th class="num">Balance</th><th class="num">Net P&amp;L</th><th class="num">Record</th></tr></thead><tbody>` +
-        rows.map((r, i) => `<tr><td class="rank mono">${i + 1}</td><td><a href="trader.html?name=${encodeURIComponent(r.name)}">${esc(r.name)}</a>${r.gold ? ' <span class="gold">★</span>' : ''}</td><td class="num">${tok(r.equity)}</td><td class="num muted" title="balance × KWK ${d.rate.toFixed(3)}">${worth(r.balance, d.rate)}</td><td class="num">${tok(r.balance)}</td><td class="num ${r.pnl >= 0 ? 'pos' : 'neg'}">${r.pnl >= 0 ? '+' : ''}${tok(r.pnl)}</td><td class="num muted">${r.wins}–${r.losses}</td></tr>`).join('') + '</tbody></table></div>'
+        rows.map((r, i) => `<tr><td class="rank mono">${i + 1}</td><td><a href="trader.html?name=${encodeURIComponent(r.name)}">${esc(r.name)}</a>${r.title ? ` <span class="wearing">${esc(r.title)}</span>` : ''}${r.gold ? ' <span class="gold">★</span>' : ''}</td><td class="num">${tok(r.equity)}</td><td class="num muted" title="balance × KWK ${d.rate.toFixed(3)}">${worth(r.balance, d.rate)}</td><td class="num">${tok(r.balance)}</td><td class="num ${r.pnl >= 0 ? 'pos' : 'neg'}">${r.pnl >= 0 ? '+' : ''}${tok(r.pnl)}</td><td class="num muted">${r.wins}–${r.losses}</td></tr>`).join('') + '</tbody></table></div>'
         : '<p class="empty">nobody\'s traded yet. the top spot is wide open and honestly it\'s embarrassing for everyone.</p>';
     }
 
@@ -160,13 +178,18 @@
       const t = d.traders[name] || d.traders[Object.keys(d.traders).find(k => k.toLowerCase() === name.toLowerCase())];
       if (!t) { main.innerHTML = `<p class="empty">no trader called ${esc(name)}. say something in chat and you'll exist. that's how it works here.</p>`; return; }
       document.title = t.name + ' · Kwanzshi';
-      $('#title').innerHTML = esc(t.name) + (t.gold ? ' <span class="gold">★ Gold Card holder</span>' : '');
+      $('#title').innerHTML = esc(t.name) + (t.title ? ` <span class="wearing">${esc(t.title)}</span>` : '') + (t.gold ? ' <span class="gold">★ Gold Card holder</span>' : '');
       $('#tiles').innerHTML = [['Equity', tok(t.equity)], ['Worth at KWK ' + d.rate.toFixed(3), worth(t.balance, d.rate)], ['Balance', tok(t.balance)], ['Net P&L', (t.pnl >= 0 ? '+' : '') + tok(t.pnl)], ['Record', t.wins + '–' + t.losses]]
         .map(([k, v]) => `<div class="tile"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
       $('#positions').innerHTML = t.positions.length ? `<div class="tw"><table><thead><tr><th>Market</th><th>Side</th><th class="num">Contracts</th><th class="num">Avg cost</th><th class="num">Worth now</th><th class="num">Pays if right</th></tr></thead><tbody>` +
         t.positions.map(p => `<tr><td><a href="market.html?id=${p.market_id}">${mk(p.market_id)}</a> <span class="muted">${esc(p.title)}</span></td><td class="${p.side}">${p.side === 'yes' ? 'Yes' : 'No'}</td><td class="num">${px(p.contracts)}</td><td class="num">${px(p.avg_cost)}</td><td class="num">${tok(p.value)}</td><td class="num">${tok(p.contracts * 100)}</td></tr>`).join('') + '</tbody></table></div>'
         : '<p class="empty">no open positions.</p>';
       $('#trades').innerHTML = tradeRows(t.trades, true);
+      const owned = t.titles || [];
+      $('#titles').innerHTML = owned.length
+        ? `<div class="titles">${owned.map(n => `<span class="ttl${n === t.title ? ' on' : ''}">${esc(n)}</span>`).join('')}</div><p class="muted">wear one with <span class="cmd">!title name</span> in chat. <span class="cmd">!title off</span> for none.</p>`
+        : '<p class="empty">no titles yet. achievements hand them out. a few silly ones are in the shop.</p>';
+      $('#achievements').innerHTML = achievementRows(d.achievements || [], t.ach || {});
     }
 
     if (page === 'giveaways') {
@@ -180,7 +203,7 @@
     }
     if (page === 'shop') {
       // category tabs: All first and by default, then each category that has items. the hash remembers the tab (#cards)
-      const CATS = ['Viewer Rewards', 'Cards', 'Assets'];
+      const CATS = ['Viewer Rewards', 'Cards', 'Assets', 'Titles'];
       const slug = c => c.toLowerCase().replace(/\s+/g, '-');
       const have = ['All', ...CATS.filter(c => d.shop.items.some(it => (it.category || 'Viewer Rewards') === c))];
       const want = location.hash.replace('#', '');
