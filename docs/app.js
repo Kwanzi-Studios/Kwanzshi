@@ -218,7 +218,7 @@
       // assets: a small panel each, the picture and how many are owned. hover says how it pays
       const as = t.assets || [], aw = $('#assets');
       if (aw) aw.innerHTML = as.length
-        ? `<div class="assets">${as.map(a => `<div class="asset" title="${esc(a.pays)}${a.earned > 0 ? ' · earned ' + kw(a.earned) + ' so far' : ''}">${a.image ? `<img src="${esc(a.image)}" alt="">` : '<div class="noimg"></div>'}<div class="n">${esc(a.name)}</div><div class="q">×${Math.round(a.qty).toLocaleString()}</div></div>`).join('')}</div>` +
+        ? `<div class="assets">${as.map(a => `<div class="asset" title="${esc(a.pays)}${a.stream ? ' · paid when the stream ends' : ''}${a.earned > 0 ? ' · earned ' + kw(a.earned) + ' so far' : ''}">${a.image ? `<img src="${esc(a.image)}" alt="">` : '<div class="noimg"></div>'}<div class="n">${esc(a.name)}</div><div class="q">×${Math.round(a.qty).toLocaleString()}</div></div>`).join('')}</div>` +
           `<p class="muted">earning about ${kw(as.reduce((n, a) => n + (a.stream ? 0 : a.per_day), 0))} a day${as.some(a => a.stream) ? ', plus stream income whenever a stream ends' : ''}.</p>`
         : '<p class="empty">no assets yet. find them in the <a href="shop.html#assets">shop</a>.</p>';
       const owned = t.titles || [];
@@ -250,7 +250,7 @@
         window.addEventListener('hashchange', () => render(d));
       }
       const shown = cat === 'All' ? d.shop.items : d.shop.items.filter(it => (it.category || 'Viewer Rewards') === cat);
-      $('#items').innerHTML = shown.length ? [...shown].sort((a, b) => a.price - b.price).map(it => `<button class="item" type="button" data-cmd="!shop buy ${it.id}" title="click to copy the command">${it.image ? `<img class="pic" src="${esc(it.image)}" alt="">` : ''}<div><div class="name">${esc(it.name)}</div>${it.description ? `<div class="desc">${esc(it.description)}</div>` : ''}${it.pays ? `<div class="desc">${esc(it.pays)}</div>` : (it.yield ? `<div class="desc">Pays ${kw(it.yield)} every day you own it</div>` : '')}${it.once ? `<div class="muted">one per viewer</div>` : ''}${it.supply != null ? `<div class="muted">${it.left > 0 ? `${it.left} of ${it.supply} left` : 'sold out'}</div>` : ''}<div class="muted">click to copy <code>!shop buy ${it.id}</code>, then paste it in chat</div></div><div class="price">${kw(it.price)}</div></button>`).join('')
+      $('#items').innerHTML = shown.length ? [...shown].sort((a, b) => a.price - b.price).map(it => `<button class="item" type="button" data-cmd="!shop buy ${it.id}" title="click to copy the command">${it.image ? `<img class="pic" src="${esc(it.image)}" alt="">` : ''}<div><div class="name">${esc(it.name)}</div>${it.description ? `<div class="desc">${esc(it.description)}</div>` : ''}${it.pays ? `<div class="desc">${esc(it.pays)}</div>${it.stream ? '<div class="muted">paid when the stream ends</div>' : ''}` : (it.yield ? `<div class="desc">Pays ${kw(it.yield)} every day you own it</div>` : '')}${it.once ? `<div class="muted">one per viewer</div>` : ''}${it.supply != null ? `<div class="muted">${it.left > 0 ? `${it.left} of ${it.supply} left` : 'sold out'}</div>` : ''}<div class="muted">click to copy <code>!shop buy ${it.id}</code>, then paste it in chat</div></div><div class="price">${kw(it.price)}</div></button>`).join('')
         : '<p class="empty">shelf is empty. restocking. allegedly.</p>';
       document.querySelectorAll('.item[data-cmd]').forEach(btn => btn.addEventListener('click', () => {
         const cmd = btn.dataset.cmd, hint = btn.querySelector('.muted'), was = hint.innerHTML;
