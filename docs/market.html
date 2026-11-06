@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Market · Kwanzshi</title>
+<link rel="stylesheet" href="style.css?v=e2a001daed">
+</head>
+<body data-page="market">
+<div class="wrap">
+<header class="top">
+  <a href="index.html"><img src="header.png" alt="Kwanzshi"></a>
+  <div class="kwk" id="kwk"><small>KWK</small>—</div>
+</header>
+<nav>
+  <a href="index.html" class="">Exchange</a>
+  <a href="markets.html" class="here">Markets</a>
+  <a href="leaderboard.html" class="">Leaderboard</a>
+  <a href="trader.html" id="me">My Portfolio</a>
+  <a href="shop.html" class="">Shop</a>
+  <a href="giveaways.html" class="">Giveaways</a>
+  <a href="how.html" class="">How to play</a>
+</nav>
+<main id="main">
+<h1 id="title"></h1>
+<p class="lede" id="sub"></p>
+<p id="cmd"></p>
+<div class="grid" id="tiles"></div>
+<h2>price</h2>
+<canvas class="chart" id="chart"></canvas>
+<div id="kwkwrap"><h2>KWK against the line</h2><canvas class="chart" id="kwkchart"></canvas><p class="muted">yellow dashed line is the strike. above it when the clock hits and yes pays. below it and, well. you know.</p></div>
+<h2>trades</h2>
+<div id="trades"></div>
+<div id="settlewrap"><h2>who got paid</h2><div id="settle"></div></div>
+</main>
+<p class="stamp" id="stamp"></p>
+<p class="stamp">KWONKS are the future. buy now. kwanzshi is not kalshi (it's better). live at <a href="https://twitch.tv/kwanzi">kwanzi</a> on twitch</p>
+</div>
+<script src="app.js?v=e2a001daed"></script>
+</body>
+</html>
