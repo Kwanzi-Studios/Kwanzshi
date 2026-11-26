@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Markets · Kwanzshi</title>
+<link rel="stylesheet" href="style.css?v=e2a001daed">
+</head>
+<body data-page="markets">
+<div class="wrap">
+<header class="top">
+  <a href="index.html"><img src="header.png" alt="Kwanzshi"></a>
+  <div class="kwk" id="kwk"><small>KWK</small>—</div>
+</header>
+<nav>
+  <a href="index.html" class="">Exchange</a>
+  <a href="markets.html" class="here">Markets</a>
+  <a href="leaderboard.html" class="">Leaderboard</a>
+  <a href="trader.html" id="me">My Portfolio</a>
+  <a href="shop.html" class="">Shop</a>
+  <a href="giveaways.html" class="">Giveaways</a>
+  <a href="how.html" class="">How to play</a>
+</nav>
+<main id="main">
+<div class="intro">
+<div class="intro-text">
+<h1>markets</h1>
+<p class="lede">see all markets ever put up on stream here. the running list that updates every minute.</p>
+</div>
+<button class="sidecard" type="button" data-dialog="modhelp"><span class="big">mod? learn how to make markets</span><span class="small">the commands, the rules, all from chat</span></button>
+</div>
+<dialog class="modal" id="modhelp">
+<div class="modal-head"><h2>making markets</h2><button class="close" type="button" data-close aria-label="close">×</button></div>
+<h3>open one</h3>
+<p class="note">the moment a market opens it's live. it shows on the overlay and on this page, viewers buy and sell yes or no with <code>!buy</code> and <code>!sell</code>, and the price moves with every trade until it closes.</p>
+<h4>created markets</h4>
+<dl class="cmds">
+<dt>!market create "Question?"</dt><dd>open ended. no clock. trading runs until you close or resolve it. yes starts at 50.</dd>
+<dt>!market create "Question?" 20</dt><dd>same, with yes starting at 20 instead of 50.</dd>
+<dt>!market create "Question?" 20 30</dt><dd>with a clock. after 30 minutes it settles itself: yes if a mod resolved it yes before time ran out, otherwise no, it didn't happen.</dd>
+</dl>
+<h4>kalshi markets</h4>
+<dl class="cmds">
+<dt>!market kalshi giants win</dt><dd>step 1. search with a few words. the bot shows the closest match.</dd>
+<dt>!market kalshi https://kalshi.com/...</dt><dd>step 1, the other way. paste the market's link instead of searching.</dd>
+<dt>!market kalshi create</dt><dd>step 2. opens the market it just showed you. not the right one? search again first.</dd>
+</dl>
+<h3>run it</h3>
+<dl class="cmds">
+<dt>!market resolve market2 yes</dt><dd>pays out a created market. yes or no. this is final, there's no undo once people are paid.</dd>
+<dt>!market close market2</dt><dd>stops trading on a created market now. resolve it later.</dd>
+<dt>!market void market2</dt><dd>cancels any market. everyone gets their KWONKS back.</dd>
+</dl>
+</dialog>
+<h2>open</h2>
+<div id="open"></div>
+<h2>settled</h2>
+<div id="past"></div>
+</main>
+<p class="stamp" id="stamp"></p>
+<p class="stamp">KWONKS are the future. buy now. kwanzshi is not kalshi (it's better). live at <a href="https://twitch.tv/kwanzi">kwanzi</a> on twitch</p>
+</div>
+<script src="app.js?v=e2a001daed"></script>
+</body>
+</html>
